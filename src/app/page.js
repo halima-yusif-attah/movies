@@ -1,9 +1,9 @@
 "use client"
 
-import { MovieData } from '@/context/MovieContext';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useContext, useState } from 'react'
+import { MovieData } from '../context/MovieContext';
 
 function Page() {
 
@@ -18,26 +18,8 @@ function Page() {
 
   const { data: movies, loading } = context;
 
-  console.log("movies", movies)
+  console.log('movies', movies);
 
-  const getImageUrl = (path, type= 'poster') => {
-    const baseUrl = 'https://image.tmdb.org/t/p/';
-    const size = type === 'poster' ? 'w500' : 'w780'; 
-    return path ? `${baseUrl}${size}${path}` : '';
-  };
-   console.log("urls", getImageUrl());
-
-   console.log(movies.release_dates.results)
-
-   const renderGenres = () => {
-     return movies.genres.map((genre) => genre.name).join(", ");
-   };
-
-   const renderProductionCompanies = () => {
-     return movies.production_companies
-       .map((company) => company.name)
-       .join(", ");
-   };
 
      const handleFilter = (e) => {
        const search = e.target.value.toLowerCase();
@@ -47,47 +29,57 @@ function Page() {
     
        const filtered = movies?.filter(
          (item) =>
-           item.title.toLowerCase().includes(search) ||
-           item.description.toLowerCase().includes(search)
+           item.title.toLowerCase().startsWith(search) 
        );
 
+       console.log("filtered-fxn", filtered);
        setFilteredData(filtered);
      };
+
+    //  console.log("filteredData", filteredData);
  
 
   return (
-    <div className="flex flex-col h-[100vh] bg-gray-900 w-full">
+    <div className="flex flex-col min-h-full  w-full">
       {loading && <p>Loading...</p>}
 
       {}
 
-      <div className=" bg-gray-500 p-4  h-[50px]  flex items-center justify-center">
+      <div className=" bg-gray-500 p-4 flex items-center justify-center fixed w-full z-10">
         <input
           type="text"
-          placeholder="Search"
-          onChange={handleFilter}
+          placeholder="Search for movies by titles..."
+          onChange={(e) => setSearchTerm(e.target.value)}
           value={searchTerm}
           className="p-2 rounded-md w-[40%] "
         />
+        <button onClick={handleFilter}>submit</button>
       </div>
 
       
           
-      <div className="h-[calc(100vh-50px)] flex p-4">
+      <div className=" grid grid-cols-3 grid-rows-5 p-8 gap-x-4 gap-y-8 mt-8 z-0">
         {filteredData.length > 0 ? (
            
-        filteredData.map((movie, index) => (
-          <div href="" className="w-[25%] bg-[white] flex flex-col rounded-md h-fit" key={movie}>
-          <Image fill alt="" src="" />
+        filteredData.map((m, _) => (
+          <Link href={`/movies/${m.id}`} key={m.id} className="bg-[gray] mt-[5rem] flex flex-col space-y-2 rounded-md text-white ">
+            <div className="w-full h-[10rem] sm:h-[15rem] md:h-[20rem] bg-black relative">
+              <Image fill alt={m.title} src={`https://image.tmdb.org/t/p/w500${m.poster_path}`} className='rounded-t-md object-cover'/>
+            </div>
           <div className="flex flex-col gap-2 text-sm">
-            <p>titles</p>
-            <p>realease date</p>
-            <p>ratings</p>
+            <p>Title: {m.title}</p>
+            <p>Release date: {m.release_date}</p>
+            <p>Ratings: {m.vote_average}</p>
           </div>
-        </div>))
+          
+        </Link>
+        ))
        ) : (
-          <div>No data found</div>
+          <div className='text-white absolute top-[50%] left-[50%]  -translate-x-[50%]'>Type in the movie title to search for movies</div>
         )}
+
+      
+        
         
        
       </div>
