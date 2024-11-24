@@ -11,7 +11,6 @@ const [_error, setError] = useState(null);
      useEffect(() => {
        const fetchData = async () => {
          const id = (await params).id;
-         console.log("id", id);
          setLoading(true);
          const apiKey = "4b0a1242b6517969e0716f2b60796018";
          const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&append_to_response=trailers,casts,reviews,recommendations`
@@ -41,7 +40,6 @@ const [_error, setError] = useState(null);
     return <p className="text-white">loading...</p>
   }
   if (!data && !loading) {
-    console.log("loading completed");
     return <p className="text-white">data not found</p>
   }
 
@@ -49,8 +47,12 @@ const [_error, setError] = useState(null);
   return (
   <div className="text-gray-300 p-4 text-lg">
     
-      <h1 className="capitalize font-bold text-3xl text-center mb-4 text-teal-400">{data.title}</h1>
-      <div className="w-full flex"><Link href="/" className=" border-slate-500 py-2 px-4 width-fit border rounded-md ml-auto">Home</Link></div>
+    <header className="mb-6">
+      <div className="w-full flex"><Link href="/" className=" border-slate-500 py-2 px-4 width-fit border rounded-md ">Home</Link></div>
+      <h1 className="capitalize font-bold text-3xl text-center text-teal-400">{data.title}</h1>
+    </header>
+      
+      
   
       <section className="section"> 
         <h2 className="h2">plot summary</h2>
@@ -104,14 +106,14 @@ const [_error, setError] = useState(null);
       </section>  
 
       <section className="section">
-        <h2 className="h2">Ratings:</h2>
+        <h2 className="h2">Ratings</h2>
          <p className="text-center font-bold text-2xl"> {data.vote_average}</p>
       </section>
        
       <section className="section">
         <h2 className="h2">Trailers</h2>
       {data.trailers.youtube.length === 0? <p className="text-center font-bold text-lg">No trailers available.</p> : 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center flex-wrap gap-4">
       {data.trailers.youtube.map((t,i) => 
           ( <iframe width={400} height={250} src={`https://www.youtube.com/embed/${t.source}`}  key={i} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
   allowFullScreen className="b-0"></iframe>)     
