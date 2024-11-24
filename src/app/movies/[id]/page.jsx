@@ -37,18 +37,21 @@ const [_error, setError] = useState(null);
 
   
   if (loading) {
+    console.log("loading");
     return <p className="text-white">loading...</p>
   }
   if (!data && !loading) {
+    console.log("loading completed");
     return <p className="text-white">data not found</p>
   }
 
 
   return (
   <div className="text-gray-300 p-4 text-lg">
-
+    
       <h1 className="capitalize font-bold text-3xl text-center mb-4 text-teal-400">{data.title}</h1>
-     
+      <div className="w-full flex"><Link href="/" className=" border-slate-500 py-2 px-4 width-fit border rounded-md ml-auto">Home</Link></div>
+  
       <section className="section"> 
         <h2 className="h2">plot summary</h2>
         <p className=" tracking-wide ">{data.overview}</p> 
@@ -56,7 +59,7 @@ const [_error, setError] = useState(null);
       
       <section className="section"> 
       <ul>
-        <h2 className="h2">casts:</h2>
+        <h2 className="h2">casts</h2>
         <div className="grid grid-cols-3 gap-4">
       {data.casts.cast.map((cast) => (
         <ol key={cast.cast_id}>{cast.name} - {cast.character}</ol>
@@ -67,26 +70,26 @@ const [_error, setError] = useState(null);
 
       <section className="section">
       
-        <h2 className="h2">crew:</h2>
+        <h2 className="h2">crew</h2>
         <div className="grid grid-cols-3 gap-4">
           <div className="">
           <h3 className="h3">names</h3>
           {data.casts.crew.map((c) => (
-            <p key={c.credit_id} className="text-base">{c.name} </p>
+            <p key={c.credit_id} className="text-lg">{c.name} </p>
           ))}
           </div>
 
           <div>
           <h3 className="h3">departments</h3>
           {data.casts.crew.map((c) => (
-            <p key={c.credit_id}>{c.department} </p>
+            <p key={c.credit_id} className="text-lg">{c.department} </p>
           ))}
         </div>
 
         <div>
           <h3 className="h3">jobs</h3>
           {data.casts.crew.map((c) => (
-            <p key={c.credit_id}>{c.job} </p>
+            <p key={c.credit_id} className="text-lg">{c.job} </p>
           ))}
         </div>
         </div>
@@ -118,7 +121,8 @@ const [_error, setError] = useState(null);
       </section>
       <section className="section">
         <h2 className="h2">Similar Movies</h2>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4
+        ">
         {data.recommendations.results.map((movie) => (
           <Link href={`/movies/${movie.id}`} key={movie.id}>
             <p>{movie.title}</p>
