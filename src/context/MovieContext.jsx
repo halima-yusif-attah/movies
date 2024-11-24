@@ -13,7 +13,7 @@ const [error, setError] = useState(null);
      useEffect(() => {
        const fetchData = async () => {
          setLoading(true);
-         const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+         const apiKey = "4b0a1242b6517969e0716f2b60796018";
          const url = `https://api.themoviedb.org/3/search/movie?query=Stars+Wars&api_key=${apiKey}`             
          
          try {
