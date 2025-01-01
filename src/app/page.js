@@ -7,7 +7,6 @@ import { MovieData } from '../context/MovieContext';
 
 function Page() {
 
-  const [filteredData, setFilteredData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   const context = useContext(MovieData);
@@ -17,28 +16,27 @@ function Page() {
   }
 
   const { data: movies, loading } = context;
+  
 
      const handleSearch = (e) => {
        const search = e.target.value.toLowerCase();
        setSearchTerm(search); 
        
-       if (!search) {
-        return setFilteredData([]);
-       }
-        
-       const filtered = movies?.filter(
-         (item) =>
-           item.title.toLowerCase().startsWith(search) 
-       );
-
-       setFilteredData(filtered);
      };
- 
+
+     if (loading || !movies) {
+      return (
+        <div className='flex items-center justify-center'>
+        <p className='text-white text-center'>loading...</p>
+        </div>
+      )
+     }
+
+     const allMovies = movies.filter((m) => m.title.toLowerCase().includes(searchTerm));
 
   return (
     <div className="flex flex-col min-h-screen  w-full">
-      {loading && <p className='bg-gray-500'>Loading...</p>}
-
+  
       <nav className=" bg-gray-500 p-4 flex items-center justify-center fixed w-full z-10">
         <input
           type="text"
@@ -49,25 +47,14 @@ function Page() {
         />
       </nav>
 
-      
-
-        <header>
+         <header>
         <h1 className='text-6xl capitalize text-teal-400 mb-4 mt-[8rem] text-center'>star war films collection</h1>
-        </header>  
+       </header>  
 
-         {filteredData.length === 0 ?
-           (
-          <div className=''>
-            <p className='text-gray-300 text-lg text-center'>
-            Type in the movie title to search for movies
-            </p>
-          </div>
-
-        )
-        : 
-        (
+           
       <div className="grid-container">     
-       { filteredData.map((m) => (
+      { allMovies.length > 0 && allMovies
+         .map((m) => (
         <Link href={`/movies/${m.id}`} key={m.id} className="bg-[gray] flex flex-col space-y-2 rounded-md text-white ">
             <div className="w-full h-[10rem] sm:h-[15rem] md:h-[20rem] bg-black relative">
               <Image fill alt={m.title} src={`https://image.tmdb.org/t/p/w500${m.poster_path}`} className='rounded-t-md object-cover'/> 
@@ -78,11 +65,17 @@ function Page() {
             <p>Ratings: {m.vote_average}</p>
           </div>  
         </Link>
-       ))}
+       )) 
+       
+      }
       </div>
-      )
-    }
+
+    <div className='flex items-center justify-center'>     
+      {allMovies.length === 0 && <p className="text-white text-lg">No search item not found</p>}
+    </div>
+    
   </div>
+
   );
 }
 
